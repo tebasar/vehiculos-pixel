@@ -1,10 +1,8 @@
-// Código HTML actualizado con validación visual para campos obligatorios
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gestión de Vehículos</title>
   <style>
     body {
@@ -28,6 +26,7 @@
       text-align: left;
       background-color: #2a2a2a;
       vertical-align: top;
+      position: relative;
     }
     th {
       background-color: #4C4CFF;
@@ -68,38 +67,38 @@
       margin-top: 4px;
       display: block;
     }
+    @keyframes fadeout {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
   </style>
 </head>
 <body>
   <h1>Gestión de Vehículos 🚗🏍️🚲</h1>
+
   <div class="form-inline">
     <select id="tipo">
       <option value="Auto">Auto</option>
       <option value="Moto">Moto</option>
       <option value="Bicicleta">Bicicleta</option>
     </select>
-    <input id="marca" placeholder="Marca">
-    <input id="modelo" placeholder="Modelo">
-    <input id="anio" type="number" placeholder="Año">
-    <input id="motor" placeholder="Tipo de motor">
-    <input id="cubiertas" placeholder="Cubiertas (marca/modelo)">
-    <input id="presion" placeholder="Presión neumáticos (psi)">
-    <input id="aceite" placeholder="Tipo de aceite">
-    <input id="cantidadAceite" placeholder="Cantidad de aceite (L)">
-    <input id="hp" placeholder="Caballos de fuerza (HP)">
-    <input id="frenos" placeholder="Tipo de frenos">
+    <input id="marca" placeholder="Marca" />
+    <input id="modelo" placeholder="Modelo" />
+    <input id="anio" type="number" placeholder="Año" />
+    <input id="motor" placeholder="Tipo de motor" />
+    <input id="cubiertas" placeholder="Cubiertas (marca/modelo)" />
+    <input id="presion" placeholder="Presión neumáticos (psi)" />
+    <input id="aceite" placeholder="Tipo de aceite" />
+    <input id="cantidadAceite" placeholder="Cantidad de aceite (L)" />
+    <input id="hp" placeholder="Caballos de fuerza (HP)" />
+    <input id="frenos" placeholder="Tipo de frenos" />
     <button class="btn" onclick="agregarVehiculo()">💾 Guardar</button>
   </div>
 
   <table>
     <thead>
       <tr>
-        <th>Tipo</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Año</th>
-        <th>Detalles Técnicos</th>
-        <th>Servicios</th>
+        <th>Información del Vehículo</th>
         <th>Acciones</th>
       </tr>
     </thead>
@@ -113,54 +112,79 @@
       const tbody = document.getElementById('tabla-vehiculos');
       tbody.innerHTML = '';
       vehiculos.forEach((v, i) => {
-        const serviciosHTML = v.servicios?.length
-          ? `<ul style='margin:0;padding-left:16px;'>` + v.servicios.map(s => `<li>${s}</li>`).join('') + `</ul>`
-          : '<em>Sin servicios</em>';
-
-        const detallesInputs = `
-          <label class='label'>Motor</label>
-          <input style='width:100%' value='${v.motor}' onchange='editarCampo(${i}, "motor", this.value)'>
-          <label class='label'>Cubiertas</label>
-          <input style='width:100%' value='${v.cubiertas}' onchange='editarCampo(${i}, "cubiertas", this.value)'>
-          <label class='label'>Presión</label>
-          <input style='width:100%' value='${v.presion}' onchange='editarCampo(${i}, "presion", this.value)'>
-          <label class='label'>Aceite</label>
-          <input style='width:100%' value='${v.aceite}' onchange='editarCampo(${i}, "aceite", this.value)'>
-          <label class='label'>Cant. Aceite</label>
-          <input style='width:100%' value='${v.cantidadAceite}' onchange='editarCampo(${i}, "cantidadAceite", this.value)'>
-          <label class='label'>HP</label>
-          <input style='width:100%' value='${v.hp}' onchange='editarCampo(${i}, "hp", this.value)'>
-          <label class='label'>Frenos</label>
-          <input style='width:100%' value='${v.frenos}' onchange='editarCampo(${i}, "frenos", this.value)'>`;
-
         const fila = document.createElement('tr');
         fila.innerHTML = `
-          <td><input value='${v.tipo}' onchange='editarCampo(${i}, "tipo", this.value)'></td>
-          <td><input value='${v.marca}' onchange='editarCampo(${i}, "marca", this.value)'></td>
-          <td><input value='${v.modelo}' onchange='editarCampo(${i}, "modelo", this.value)'></td>
-          <td><input value='${v.anio}' onchange='editarCampo(${i}, "anio", this.value)'></td>
-          <td>${detallesInputs}</td>
-          <td>${serviciosHTML}
-            <input type="text" id="nuevo-servicio-${i}" placeholder="Nuevo servicio" style="margin-top:5px; width:100%;">
-            <button class="btn" onclick="agregarServicio(${i})">➕ Agregar</button>
-          </td>
           <td>
-            <button class="btn" onclick="eliminarVehiculo(${i})">❌ Eliminar</button>
-          </td>`;
+            <div style="border:1px dashed #4CFF4C; padding:6px; margin-bottom:6px;">
+              <label class='label'>Información General</label>
+              <label class='label'>Tipo</label><input value='${v.tipo}' onchange='editarCampo(${i}, "tipo", this.value, true)'>
+              <label class='label'>Marca</label><input value='${v.marca}' onchange='editarCampo(${i}, "marca", this.value, true)'>
+              <label class='label'>Modelo</label><input value='${v.modelo}' onchange='editarCampo(${i}, "modelo", this.value, true)'>
+              <label class='label'>Año</label><input value='${v.anio}' onchange='editarCampo(${i}, "anio", this.value, true)'>
+            </div>
+            <div style="border:1px dashed #FF4C4C; padding:6px; margin-bottom:6px;">
+              <label class='label'>Datos Técnicos</label>
+              <label class='label'>Motor</label><input value='${v.motor}' onchange='editarCampo(${i}, "motor", this.value, true)'>
+              <label class='label'>Cubiertas</label><input value='${v.cubiertas}' onchange='editarCampo(${i}, "cubiertas", this.value, true)'>
+              <label class='label'>Presión</label><input value='${v.presion}' onchange='editarCampo(${i}, "presion", this.value, true)'>
+              <label class='label'>Aceite</label><input value='${v.aceite}' onchange='editarCampo(${i}, "aceite", this.value, true)'>
+              <label class='label'>Cant. Aceite</label><input value='${v.cantidadAceite}' onchange='editarCampo(${i}, "cantidadAceite", this.value, true)'>
+              <label class='label'>HP</label><input value='${v.hp}' onchange='editarCampo(${i}, "hp", this.value, true)'>
+              <label class='label'>Frenos</label><input value='${v.frenos}' onchange='editarCampo(${i}, "frenos", this.value, true)'>
+            </div>
+            <div style="border:1px dashed #4C4CFF; padding:6px; position:relative;">
+              <label class='label'>Historial de Servicios</label>
+              ${v.servicios?.length ? `<ul style='margin:0;padding-left:16px;'>${v.servicios.map(s => `<li>${s}</li>`).join('')}</ul>` : '<em>Sin servicios</em>'}
+              <input type="text" id="nuevo-servicio-${i}" placeholder="Nuevo servicio"
+                style="margin-top:5px; width:100%; background-color:#1a1a1a; color:white; border:1px solid #555; padding:5px;"
+                onfocus="this.style.border='2px solid #FFFF4C'" onblur="this.style.border='1px solid #555'">
+              <button class="btn" onclick="
+                const input = document.getElementById('nuevo-servicio-${i}');
+                const valor = input.value.trim();
+                let aviso = document.getElementById('aviso-${i}');
+                if (!valor) {
+                  input.style.border = '2px solid red';
+                  input.placeholder = 'Este campo no puede estar vacío';
+                } else {
+                  vehiculos[${i}].servicios.push(valor);
+                  localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
+                  input.value = '';
+                  input.placeholder = 'Nuevo servicio';
+                  input.style.border = '1px solid #555';
+                  if (!aviso) {
+                    aviso = document.createElement('div');
+                    aviso.id = 'aviso-${i}';
+                    aviso.innerText = '✔ Servicio agregado';
+                    aviso.style.position = 'absolute';
+                    aviso.style.bottom = '-18px';
+                    aviso.style.right = '8px';
+                    aviso.style.fontSize = '12px';
+                    aviso.style.color = '#4CFF4C';
+                    aviso.style.animation = 'fadeout 2s ease forwards';
+                    document.querySelector(\`#nuevo-servicio-${i}\`).parentElement.appendChild(aviso);
+                    setTimeout(() => aviso.remove(), 2000);
+                  }
+                  mostrarVehiculos();
+                }
+              ">➕ Agregar</button>
+            </div>
+          </td>
+          <td><button class="btn" onclick="eliminarVehiculo(${i})">❌ Eliminar</button></td>
+        `;
         tbody.appendChild(fila);
       });
     }
 
     function agregarVehiculo() {
-      const campos = ["marca", "modelo", "anio"];
+      const campos = ['marca', 'modelo', 'anio'];
       let valido = true;
       campos.forEach(id => {
         const el = document.getElementById(id);
         if (!el.value.trim()) {
-          el.classList.add("input-error");
+          el.classList.add('input-error');
           valido = false;
         } else {
-          el.classList.remove("input-error");
+          el.classList.remove('input-error');
         }
       });
       if (!valido) return;
@@ -185,25 +209,31 @@
       mostrarVehiculos();
     }
 
-    function agregarServicio(index) {
-      const input = document.getElementById(`nuevo-servicio-${index}`);
-      const nuevoServicio = input.value.trim();
-      if (nuevoServicio) {
-        vehiculos[index].servicios.push(nuevoServicio);
-        localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
-        mostrarVehiculos();
-      }
-    }
-
-    function editarCampo(index, campo, valor) {
-      vehiculos[index][campo] = valor;
-      localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
-    }
-
     function eliminarVehiculo(index) {
       vehiculos.splice(index, 1);
       localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
       mostrarVehiculos();
+    }
+
+    function editarCampo(index, campo, valor, mostrarAviso = false) {
+      vehiculos[index][campo] = valor;
+      localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
+      if (mostrarAviso) {
+        const fila = document.querySelectorAll('tbody tr')[index];
+        if (fila && !fila.querySelector('.edicion-ok')) {
+          const aviso = document.createElement('div');
+          aviso.innerText = '✔ Datos actualizados';
+          aviso.className = 'edicion-ok';
+          aviso.style.position = 'absolute';
+          aviso.style.bottom = '-18px';
+          aviso.style.right = '8px';
+          aviso.style.fontSize = '12px';
+          aviso.style.color = '#FFFF4C';
+          aviso.style.animation = 'fadeout 2s ease forwards';
+          fila.querySelector('td').appendChild(aviso);
+          setTimeout(() => aviso.remove(), 2000);
+        }
+      }
     }
 
     mostrarVehiculos();
