@@ -1,141 +1,569 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fichero de Vehículos</title>
-  <style>
-    body {
-      background-color: #1a1a1a;
-      color: white;
-      font-family: monospace;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #FFFF4C;
-    }
-    .btn {
-      background: #4C4CFF;
-      color: white;
-      padding: 8px 12px;
-      border: none;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-    .formulario {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      background-color: #2a2a2a;
-      padding: 10px;
-      border: 2px dashed #4CFF4C;
-    }
-    .ficha {
-      margin: 10px 0;
-      border: 2px solid #4C4CFF;
-      border-radius: 8px;
-      background-color: #222;
-    }
-    .ficha-cabecera {
-      background: #4C4CFF;
-      padding: 10px;
-      cursor: pointer;
-    }
-    .ficha-detalle {
-      display: none;
-      padding: 10px;
-    }
-    input, select {
-      background-color: #111;
-      color: white;
-      border: 1px solid #555;
-      padding: 6px;
-      font-family: monospace;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fichero de Vehículos v2</title>
+    <style>
+        :root {
+            --bg-dark: #1a1a1a;
+            --bg-med: #2a2a2a;
+            --bg-light: #222;
+            --text-light: white;
+            --accent1: #FFFF4C; /* Amarillo */
+            --accent2: #4C4CFF; /* Azul */
+            --accent3: #4CFF4C; /* Verde */
+            --accent-delete: #FF4C4C; /* Rojo */
+            --border-color: #555;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: monospace;
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--accent1);
+        }
+
+        .btn {
+            background: var(--accent2);
+            color: var(--text-light);
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .btn-delete {
+            background: var(--accent-delete);
+        }
+        .btn-add {
+             background: var(--accent3);
+             color: var(--bg-dark);
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .formulario-principal, .formulario-servicio {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            background-color: var(--bg-med);
+            padding: 15px;
+            margin-top: 15px;
+            border: 2px dashed var(--accent3);
+            border-radius: 8px;
+        }
+
+        .formulario-principal {
+            display: none; /* Initially hidden */
+        }
+
+         .formulario-servicio {
+             border-style: solid;
+             border-color: var(--accent2);
+             margin-top: 10px;
+             padding: 10px;
+         }
+         .formulario-servicio h4 {
+             width: 100%;
+             margin: 0 0 10px 0;
+             color: var(--accent1);
+             border-bottom: 1px solid var(--border-color);
+             padding-bottom: 5px;
+         }
+
+        .ficha {
+            margin: 15px 0;
+            border: 2px solid var(--accent2);
+            border-radius: 8px;
+            background-color: var(--bg-light);
+            overflow: hidden; /* Contain borders and padding */
+        }
+
+        .ficha-cabecera {
+            background: var(--accent2);
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+         .ficha-cabecera span {
+             font-weight: bold;
+         }
+
+        .ficha-detalle {
+            display: none; /* Initially hidden */
+            padding: 15px;
+            border-top: 2px solid var(--accent2);
+        }
+         .ficha-detalle hr {
+             border: none;
+             border-top: 1px solid var(--border-color);
+             margin: 15px 0;
+         }
+         .ficha-detalle b {
+             color: var(--accent1);
+             min-width: 80px;
+             display: inline-block;
+         }
+
+        input, select {
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            padding: 8px;
+            font-family: monospace;
+            border-radius: 4px;
+            margin: 2px;
+        }
+        input[type="date"] {
+             min-width: 130px;
+        }
+        input::placeholder {
+            color: #aaa;
+        }
+
+        .edited {
+            background-color: #33aa55 !important; /* Verde más visible */
+            transition: background-color 0.8s ease;
+        }
+
+        .servicio-item {
+            border-bottom: 1px dashed var(--border-color);
+            padding: 10px 0;
+            margin-bottom: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+        }
+        .servicio-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+         .servicio-item small {
+             color: #ccc;
+             width: 100%;
+             margin-top: 5px;
+             padding-left: 25px; /* Indent details */
+         }
+         .servicio-item input {
+             flex-grow: 1; /* Allow inputs to take space */
+         }
+         .servicio-item .btn-delete {
+             padding: 4px 8px; /* Smaller delete button for services */
+             margin-left: auto; /* Push delete button to the right */
+         }
+         .servicio-item > span:first-of-type { /* Icon + Date */
+            display: flex;
+            align-items: center;
+            gap: 5px;
+         }
+
+         label {
+            display: inline-block;
+            margin: 5px 0 2px 5px;
+            font-size: 0.9em;
+            color: #ccc;
+         }
+         .input-group {
+             display: flex;
+             flex-direction: column;
+             margin-bottom: 5px;
+         }
+
+    </style>
 </head>
 <body>
-  <h1>Fichero de Vehículos</h1>
+    <h1>Fichero de Vehículos v2</h1>
 
-  <div class="formulario">
-    <select id="tipo">
-      <option value="Auto">Auto</option>
-      <option value="Moto">Moto</option>
-      <option value="Bicicleta">Bicicleta</option>
-    </select>
-    <input id="marca" placeholder="Marca">
-    <input id="modelo" placeholder="Modelo">
-    <input id="anio" type="number" placeholder="Año">
-    <input id="motor" placeholder="Tipo de motor">
-    <input id="cubiertas" placeholder="Cubiertas">
-    <input id="presion" placeholder="Presión neumáticos">
-    <input id="aceite" placeholder="Aceite">
-    <input id="cantidadAceite" placeholder="Cantidad aceite">
-    <input id="hp" placeholder="Caballos de fuerza">
-    <input id="frenos" placeholder="Frenos">
-    <input id="vin" placeholder="VIN">
-    <input id="patente" placeholder="Patente">
-    <input id="fechaAdquisicion" type="date">
-    <button class="btn" onclick="agregarVehiculo()">＋</button>
-  </div>
+    <button class="btn" id="btnToggleFormulario">＋ Agregar Vehículo</button>
 
-  <div id="contenedor-fichas"></div>
+    <form class="formulario-principal" id="formularioAgregarVehiculo">
+        <div class="input-group">
+            <label for="tipo">Tipo</label>
+            <select id="tipo">
+                <option value="Auto">Auto</option>
+                <option value="Moto">Moto</option>
+                <option value="Bicicleta">Bicicleta</option>
+                <option value="Otro">Otro</option>
+            </select>
+        </div>
+        <div class="input-group">
+             <label for="marca">Marca</label>
+             <input id="marca" placeholder="Ej: Toyota">
+        </div>
+        <div class="input-group">
+             <label for="modelo">Modelo</label>
+             <input id="modelo" placeholder="Ej: Corolla">
+        </div>
+        <div class="input-group">
+             <label for="anio">Año</label>
+             <input id="anio" type="number" placeholder="Ej: 2023">
+        </div>
+        <div class="input-group">
+             <label for="motor">Motor</label>
+             <input id="motor" placeholder="Ej: 1.8L Nafta">
+        </div>
+         <div class="input-group">
+             <label for="hp">HP</label>
+             <input id="hp" placeholder="Caballos de fuerza">
+         </div>
+        <div class="input-group">
+             <label for="cubiertas">Cubiertas</label>
+             <input id="cubiertas" placeholder="Ej: 195/65R15">
+        </div>
+        <div class="input-group">
+             <label for="presion">Presión Neumáticos</label>
+             <input id="presion" placeholder="Ej: 32 PSI">
+        </div>
+        <div class="input-group">
+             <label for="aceite">Aceite Motor</label>
+             <input id="aceite" placeholder="Ej: Sintético 5W-30">
+        </div>
+        <div class="input-group">
+             <label for="cantidadAceite">Cantidad Aceite (L)</label>
+             <input id="cantidadAceite" placeholder="Ej: 4.2">
+        </div>
+        <div class="input-group">
+             <label for="frenos">Frenos</label>
+             <input id="frenos" placeholder="Ej: Discos ventilados / Tambor">
+        </div>
+        <div class="input-group">
+             <label for="vin">VIN</label>
+             <input id="vin" placeholder="Número de chasis">
+        </div>
+        <div class="input-group">
+             <label for="patente">Patente</label>
+             <input id="patente" placeholder="Matrícula">
+        </div>
+        <div class="input-group">
+             <label for="fechaAdquisicion">Fecha Adquisición</label>
+             <input id="fechaAdquisicion" type="date">
+        </div>
+        <button type="submit" class="btn btn-add" style="width: 100%; margin-top: 10px;">Agregar Vehículo</button>
+    </form>
+
+    <div id="contenedor-fichas"></div>
 
 <script>
-let vehiculos = JSON.parse(localStorage.getItem('vehiculos')) || [];
+    // Estado de la aplicación
+    let vehiculos = [];
+    let fichaAbiertaIndex = null; // Índice del vehículo cuya ficha está abierta
 
-function agregarVehiculo() {
-  const v = {
-    tipo: document.getElementById('tipo').value,
-    marca: document.getElementById('marca').value,
-    modelo: document.getElementById('modelo').value,
-    anio: document.getElementById('anio').value,
-    motor: document.getElementById('motor').value,
-    cubiertas: document.getElementById('cubiertas').value,
-    presion: document.getElementById('presion').value,
-    aceite: document.getElementById('aceite').value,
-    cantidadAceite: document.getElementById('cantidadAceite').value,
-    hp: document.getElementById('hp').value,
-    frenos: document.getElementById('frenos').value,
-    vin: document.getElementById('vin').value,
-    patente: document.getElementById('patente').value,
-    fechaAdquisicion: document.getElementById('fechaAdquisicion').value,
-    servicios: []
-  };
-  vehiculos.push(v);
-  localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
-  mostrarVehiculos();
-}
+    // Elementos del DOM reutilizados
+    const contenedorFichas = document.getElementById('contenedor-fichas');
+    const formularioAgregarVehiculo = document.getElementById('formularioAgregarVehiculo');
+    const btnToggleFormulario = document.getElementById('btnToggleFormulario');
 
-function mostrarVehiculos() {
-  const contenedor = document.getElementById('contenedor-fichas');
-  contenedor.innerHTML = '';
-  vehiculos.forEach((v, i) => {
-    const ficha = document.createElement('div');
-    ficha.className = 'ficha';
-    ficha.innerHTML = `
-      <div class="ficha-cabecera" onclick="
-        const d = document.getElementById('detalle-${i}');
-        d.style.display = d.style.display === 'block' ? 'none' : 'block';
-      ">
-        📁 ${v.tipo} ${v.marca} ${v.modelo} (${v.anio})
-      </div>
-      <div class="ficha-detalle" id="detalle-${i}">
-        <b>Motor:</b> ${v.motor} | <b>HP:</b> ${v.hp}<br>
-        <b>Aceite:</b> ${v.aceite} (${v.cantidadAceite}L), <b>Presión:</b> ${v.presion}<br>
-        <b>Cubiertas:</b> ${v.cubiertas} | <b>Frenos:</b> ${v.frenos}<br>
-        <b>VIN:</b> ${v.vin} | <b>Patente:</b> ${v.patente}<br>
-        <b>Adquirido:</b> ${v.fechaAdquisicion}
-        <hr>
-        <b>Servicios:</b><br>
-        ${v.servicios.length ? v.servicios.map(s => `🛠 ${s.fecha} - ${s.tipo} - ${s.desc} ($${s.costo})`).join('<br>') : '<i>Sin servicios registrados</i>'}
-      </div>`;
-    contenedor.appendChild(ficha);
-  });
-}
+    // --- Funciones de Lógica de Datos ---
 
-mostrarVehiculos();
+    function guardarVehiculos() {
+        localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
+    }
+
+    function cargarVehiculos() {
+        const guardados = localStorage.getItem('vehiculos');
+        vehiculos = guardados ? JSON.parse(guardados) : [];
+    }
+
+    function agregarVehiculo(event) {
+        event.preventDefault(); // Prevenir envío de formulario estándar
+        const v = {
+            id: Date.now().toString(), // ID único simple
+            tipo: document.getElementById('tipo').value,
+            marca: document.getElementById('marca').value.trim(),
+            modelo: document.getElementById('modelo').value.trim(),
+            anio: document.getElementById('anio').value,
+            motor: document.getElementById('motor').value.trim(),
+            cubiertas: document.getElementById('cubiertas').value.trim(),
+            presion: document.getElementById('presion').value.trim(),
+            aceite: document.getElementById('aceite').value.trim(),
+            cantidadAceite: document.getElementById('cantidadAceite').value.trim(),
+            hp: document.getElementById('hp').value.trim(),
+            frenos: document.getElementById('frenos').value.trim(),
+            vin: document.getElementById('vin').value.trim(),
+            patente: document.getElementById('patente').value.trim(),
+            fechaAdquisicion: document.getElementById('fechaAdquisicion').value,
+            servicios: []
+        };
+
+        // Validación simple (al menos marca y modelo)
+        if (!v.marca || !v.modelo) {
+            alert('Por favor, ingresa al menos la Marca y el Modelo del vehículo.');
+            return;
+        }
+
+        vehiculos.push(v);
+        guardarVehiculos();
+        formularioAgregarVehiculo.reset(); // Limpiar formulario
+        formularioAgregarVehiculo.style.display = 'none'; // Ocultar formulario
+        btnToggleFormulario.textContent = '＋ Agregar Vehículo';
+        fichaAbiertaIndex = vehiculos.length - 1; // Abrir la ficha recién creada
+        renderizarVehiculos();
+    }
+
+    function eliminarVehiculo(index) {
+        if (confirm(`¿Estás seguro de que quieres eliminar el vehículo ${vehiculos[index].marca} ${vehiculos[index].modelo}?`)) {
+            vehiculos.splice(index, 1);
+            guardarVehiculos();
+            // Si la ficha eliminada era la que estaba abierta, cerramos todas
+            if (fichaAbiertaIndex === index) {
+                fichaAbiertaIndex = null;
+            } else if (fichaAbiertaIndex > index) {
+                // Ajustar índice si se eliminó un elemento anterior
+                fichaAbiertaIndex--;
+            }
+            renderizarVehiculos();
+        }
+    }
+
+    function agregarServicio(indexVehiculo, formServicio) {
+         const fecha = formServicio.querySelector(`#fecha-serv-${indexVehiculo}`).value;
+         const tipo = formServicio.querySelector(`#tipo-serv-${indexVehiculo}`).value.trim();
+         const desc = formServicio.querySelector(`#desc-serv-${indexVehiculo}`).value.trim();
+         const costo = formServicio.querySelector(`#costo-serv-${indexVehiculo}`).value;
+
+         if (!fecha || !tipo || !desc || !costo) {
+             alert('Completa al menos Fecha, Tipo, Descripción y Costo del servicio.');
+             return;
+         }
+
+         const nuevoServicio = {
+             id: Date.now().toString(), // ID único simple para el servicio
+             fecha: fecha,
+             tipo: tipo,
+             desc: desc,
+             costo: costo,
+             mecanico: formServicio.querySelector(`#mecanico-serv-${indexVehiculo}`).value.trim(),
+             repuestos: formServicio.querySelector(`#repuestos-serv-${indexVehiculo}`).value.trim(),
+             garantia: formServicio.querySelector(`#garantia-serv-${indexVehiculo}`).value,
+             factura: formServicio.querySelector(`#factura-serv-${indexVehiculo}`).value.trim()
+         };
+
+         vehiculos[indexVehiculo].servicios.push(nuevoServicio);
+         guardarVehiculos();
+         // fichaAbiertaIndex ya debería estar correcto, solo renderizamos
+         renderizarVehiculos();
+         // No necesitamos limpiar explícitamente el form aquí porque renderizarVehiculos lo recreará vacío.
+    }
+
+     function editarServicio(indexVehiculo, indexServicio, campo, valor, inputElement) {
+         // Validar si el campo existe (simple seguridad)
+         if (vehiculos[indexVehiculo]?.servicios[indexServicio] && typeof vehiculos[indexVehiculo].servicios[indexServicio][campo] !== 'undefined') {
+            vehiculos[indexVehiculo].servicios[indexServicio][campo] = valor;
+            guardarVehiculos();
+
+            // Feedback visual
+            inputElement.classList.add('edited');
+            setTimeout(() => inputElement.classList.remove('edited'), 800);
+         } else {
+             console.error("Error al editar: Índice o campo inválido.");
+         }
+    }
+
+    function eliminarServicio(indexVehiculo, indexServicio) {
+        const servicio = vehiculos[indexVehiculo].servicios[indexServicio];
+        if (confirm(`¿Estás seguro de que quieres eliminar el servicio "${servicio.tipo}" del ${servicio.fecha}?`)) {
+            vehiculos[indexVehiculo].servicios.splice(indexServicio, 1);
+            guardarVehiculos();
+            // fichaAbiertaIndex ya está correcto, solo renderizar
+            renderizarVehiculos();
+        }
+    }
+
+    // --- Funciones de Renderizado (UI) ---
+
+    function toggleFormularioPrincipal() {
+        const esVisible = formularioAgregarVehiculo.style.display === 'flex';
+        formularioAgregarVehiculo.style.display = esVisible ? 'none' : 'flex';
+        btnToggleFormulario.textContent = esVisible ? '＋ Agregar Vehículo' : '－ Ocultar Formulario';
+        if (!esVisible) {
+            formularioAgregarVehiculo.querySelector('input, select')?.focus(); // Poner foco en el primer campo
+        }
+    }
+
+     function toggleDetalleFicha(index) {
+         if (fichaAbiertaIndex === index) {
+             fichaAbiertaIndex = null; // Cerrar si ya estaba abierta
+         } else {
+             fichaAbiertaIndex = index; // Abrir la nueva
+         }
+         renderizarVehiculos(); // Volver a renderizar para reflejar el cambio
+     }
+
+    function renderizarVehiculos() {
+        contenedorFichas.innerHTML = ''; // Limpiar contenedor
+        if (vehiculos.length === 0) {
+            contenedorFichas.innerHTML = '<p style="text-align: center; margin-top: 20px; color: #aaa;">No hay vehículos registrados. ¡Agrega el primero!</p>';
+            return;
+        }
+
+        vehiculos.forEach((v, index) => {
+            const ficha = document.createElement('div');
+            ficha.className = 'ficha';
+            ficha.dataset.index = index; // Guardar índice en el elemento
+
+            const estaAbierta = fichaAbiertaIndex === index;
+
+            // Cabecera de la Ficha
+            const cabecera = document.createElement('div');
+            cabecera.className = 'ficha-cabecera';
+            cabecera.innerHTML = `
+                <span>📁 ${v.tipo} ${v.marca} ${v.modelo} (${v.anio || 'N/A'})</span>
+                <div>
+                    <button class="btn btn-delete btn-small" data-action="delete-vehicle" data-index="${index}">Eliminar</button>
+                    <button class="btn btn-small" data-action="toggle-details" data-index="${index}">${estaAbierta ? '➖' : '➕'}</button>
+                </div>
+            `;
+            ficha.appendChild(cabecera);
+
+            // Detalle de la Ficha (si está abierta)
+            if (estaAbierta) {
+                const detalle = document.createElement('div');
+                detalle.className = 'ficha-detalle';
+                detalle.id = `detalle-${index}`; // ID útil si se necesita seleccionar directamente
+                detalle.style.display = 'block'; // Asegurarse de que sea visible
+
+                detalle.innerHTML = `
+                    <div><b>Motor:</b> ${v.motor || 'N/D'} | <b>HP:</b> ${v.hp || 'N/D'}</div>
+                    <div><b>Aceite:</b> ${v.aceite || 'N/D'} (${v.cantidadAceite || 'N/D'} L) | <b>Presión:</b> ${v.presion || 'N/D'}</div>
+                    <div><b>Cubiertas:</b> ${v.cubiertas || 'N/D'} | <b>Frenos:</b> ${v.frenos || 'N/D'}</div>
+                    <div><b>VIN:</b> ${v.vin || 'N/D'} | <b>Patente:</b> ${v.patente || 'N/D'}</div>
+                    <div><b>Adquirido:</b> ${v.fechaAdquisicion || 'N/D'}</div>
+                    <hr>
+                    <h4>Servicios Realizados:</h4>
+                    <div id="servicios-lista-${index}">
+                        ${v.servicios.length === 0 ? '<i>Sin servicios registrados</i>' : renderizarListaServicios(index)}
+                    </div>
+                    <hr>
+                    ${renderizarFormularioServicio(index)}
+                `;
+                ficha.appendChild(detalle);
+            }
+            contenedorFichas.appendChild(ficha);
+        });
+    }
+
+    function renderizarListaServicios(indexVehiculo) {
+        return vehiculos[indexVehiculo].servicios.map((s, indexServicio) => `
+            <div class="servicio-item" data-v-index="${indexVehiculo}" data-s-index="${indexServicio}">
+                <span>
+                   🛠️ <input type='date' value='${s.fecha}' data-field='fecha' title="Fecha del servicio">
+                </span>
+                 <input value='${s.tipo}' data-field='tipo' placeholder="Tipo Servicio" title="Tipo de servicio">
+                 <input value='${s.desc}' data-field='desc' placeholder="Descripción" title="Descripción">
+                 $<input type='number' value='${s.costo}' data-field='costo' placeholder="Costo" title="Costo ($)" style="max-width: 80px;">
+                 <button class='btn btn-delete btn-small' data-action="delete-service">×</button>
+                 <small>
+                     Mecánico: <input value='${s.mecanico || ''}' data-field='mecanico' placeholder='Nombre taller/mecánico'>,
+                     Repuestos: <input value='${s.repuestos || ''}' data-field='repuestos' placeholder='Piezas cambiadas'>,
+                     Garantía: <input value='${s.garantia || ''}' data-field='garantia' placeholder='Tiempo o N/A'>,
+                     Factura: <input value='${s.factura || ''}' data-field='factura' placeholder='Número o ref.'>
+                 </small>
+             </div>
+        `).join('');
+    }
+
+    function renderizarFormularioServicio(indexVehiculo) {
+        // Usamos IDs únicos para cada campo del formulario de agregar servicio
+        return `
+            <form class="formulario-servicio" id="form-servicio-${indexVehiculo}" data-v-index="${indexVehiculo}">
+                 <h4>＋ Agregar Nuevo Servicio</h4>
+                 <input type='date' id='fecha-serv-${indexVehiculo}' required title="Fecha">
+                 <input placeholder='Tipo de servicio *' id='tipo-serv-${indexVehiculo}' required>
+                 <input placeholder='Descripción *' id='desc-serv-${indexVehiculo}' required>
+                 <input placeholder='Costo *' type='number' id='costo-serv-${indexVehiculo}' required>
+                 <input placeholder='Mecánico' id='mecanico-serv-${indexVehiculo}'>
+                 <input placeholder='Repuestos utilizados' id='repuestos-serv-${indexVehiculo}'>
+                 <select id='garantia-serv-${indexVehiculo}' title="Garantía">
+                    <option value='Sin garantía'>Sin garantía</option>
+                     <option value='3 meses'>3 meses</option>
+                     <option value='6 meses'>6 meses</option>
+                     <option value='12 meses'>12 meses</option>
+                     <option value='Otro'>Otro</option>
+                 </select>
+                 <input placeholder='Factura (Nro o nota)' id='factura-serv-${indexVehiculo}'>
+                 <button type='submit' class='btn btn-add' style="width: 100%; margin-top: 10px;">Agregar Servicio</button>
+             </form>
+        `;
+    }
+
+
+    // --- Manejo de Eventos ---
+
+    function manejarClickContenedor(event) {
+        const target = event.target;
+        const action = target.dataset.action;
+        const index = parseInt(target.dataset.index, 10); // Índice del Vehículo
+
+        if (action === 'toggle-details') {
+            toggleDetalleFicha(index);
+        } else if (action === 'delete-vehicle') {
+            eliminarVehiculo(index);
+        } else if (action === 'delete-service') {
+             // Necesitamos encontrar los índices correctos del servicio
+             const itemServicio = target.closest('.servicio-item');
+             if (itemServicio) {
+                 const vIndex = parseInt(itemServicio.dataset.vIndex, 10);
+                 const sIndex = parseInt(itemServicio.dataset.sIndex, 10);
+                 eliminarServicio(vIndex, sIndex);
+             }
+        }
+    }
+
+    function manejarSubmitServicio(event) {
+        event.preventDefault(); // Prevenir submit estándar
+        const form = event.target;
+        if (form.classList.contains('formulario-servicio')) {
+             const vIndex = parseInt(form.dataset.vIndex, 10);
+             agregarServicio(vIndex, form);
+        }
+    }
+
+     function manejarCambioInputServicio(event) {
+         const input = event.target;
+         // Asegurarse que el cambio ocurrió en un input dentro de un servicio-item y tiene data-field
+         if (input.closest('.servicio-item') && input.dataset.field) {
+             const itemServicio = input.closest('.servicio-item');
+             const vIndex = parseInt(itemServicio.dataset.vIndex, 10);
+             const sIndex = parseInt(itemServicio.dataset.sIndex, 10);
+             const campo = input.dataset.field;
+             const valor = input.value;
+             editarServicio(vIndex, sIndex, campo, valor, input);
+         }
+     }
+
+
+    // --- Inicialización ---
+    function init() {
+        cargarVehiculos();
+
+        // Listeners para elementos estáticos
+        btnToggleFormulario.addEventListener('click', toggleFormularioPrincipal);
+        formularioAgregarVehiculo.addEventListener('submit', agregarVehiculo);
+
+        // Listeners delegados en el contenedor principal para elementos dinámicos
+        contenedorFichas.addEventListener('click', manejarClickContenedor);
+        contenedorFichas.addEventListener('submit', manejarSubmitServicio); // Para los forms de agregar servicio
+        contenedorFichas.addEventListener('change', manejarCambioInputServicio); // Para editar servicios inline
+
+        renderizarVehiculos(); // Renderizado inicial
+    }
+
+    // Ejecutar init cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', init);
+
 </script>
 </body>
 </html>
