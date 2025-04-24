@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gestión de Vehículos</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fichero de Vehículos</title>
   <style>
     body {
       background-color: #1a1a1a;
@@ -15,228 +15,127 @@
       text-align: center;
       color: #FFFF4C;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 2px solid #4C4CFF;
-      padding: 10px;
-      text-align: left;
-      background-color: #2a2a2a;
-      vertical-align: top;
-      position: relative;
-    }
-    th {
-      background-color: #4C4CFF;
-      color: white;
-    }
     .btn {
-      padding: 6px 12px;
-      margin: 2px;
-      background-color: #4C4CFF;
+      background: #4C4CFF;
       color: white;
+      padding: 8px 12px;
       border: none;
       cursor: pointer;
-      font-size: 14px;
+      margin-top: 10px;
     }
-    select, input {
-      padding: 5px;
-      font-family: monospace;
-      background-color: #1a1a1a;
-      color: white;
-      border: 1px solid #555;
-    }
-    .input-error {
-      border: 2px solid #FF4C4C !important;
-      background-color: #330000 !important;
-    }
-    .form-inline {
+    .formulario {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       background-color: #2a2a2a;
       padding: 10px;
       border: 2px dashed #4CFF4C;
-      margin-top: 20px;
     }
-    .label {
-      font-weight: bold;
-      color: #FFFF4C;
-      margin-top: 4px;
-      display: block;
+    .ficha {
+      margin: 10px 0;
+      border: 2px solid #4C4CFF;
+      border-radius: 8px;
+      background-color: #222;
     }
-    @keyframes fadeout {
-      0% { opacity: 1; }
-      100% { opacity: 0; }
+    .ficha-cabecera {
+      background: #4C4CFF;
+      padding: 10px;
+      cursor: pointer;
+    }
+    .ficha-detalle {
+      display: none;
+      padding: 10px;
+    }
+    input, select {
+      background-color: #111;
+      color: white;
+      border: 1px solid #555;
+      padding: 6px;
+      font-family: monospace;
     }
   </style>
 </head>
 <body>
-  <h1>Gestión de Vehículos 🚗🏍️🚲</h1>
+  <h1>Fichero de Vehículos</h1>
 
-  <div class="form-inline">
+  <div class="formulario">
     <select id="tipo">
       <option value="Auto">Auto</option>
       <option value="Moto">Moto</option>
       <option value="Bicicleta">Bicicleta</option>
     </select>
-    <input id="marca" placeholder="Marca" />
-    <input id="modelo" placeholder="Modelo" />
-    <input id="anio" type="number" placeholder="Año" />
-    <input id="motor" placeholder="Tipo de motor" />
-    <input id="cubiertas" placeholder="Cubiertas (marca/modelo)" />
-    <input id="presion" placeholder="Presión neumáticos (psi)" />
-    <input id="aceite" placeholder="Tipo de aceite" />
-    <input id="cantidadAceite" placeholder="Cantidad de aceite (L)" />
-    <input id="hp" placeholder="Caballos de fuerza (HP)" />
-    <input id="frenos" placeholder="Tipo de frenos" />
-    <button class="btn" onclick="agregarVehiculo()">💾 Guardar</button>
+    <input id="marca" placeholder="Marca">
+    <input id="modelo" placeholder="Modelo">
+    <input id="anio" type="number" placeholder="Año">
+    <input id="motor" placeholder="Tipo de motor">
+    <input id="cubiertas" placeholder="Cubiertas">
+    <input id="presion" placeholder="Presión neumáticos">
+    <input id="aceite" placeholder="Aceite">
+    <input id="cantidadAceite" placeholder="Cantidad aceite">
+    <input id="hp" placeholder="Caballos de fuerza">
+    <input id="frenos" placeholder="Frenos">
+    <input id="vin" placeholder="VIN">
+    <input id="patente" placeholder="Patente">
+    <input id="fechaAdquisicion" type="date">
+    <button class="btn" onclick="agregarVehiculo()">＋</button>
   </div>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Información del Vehículo</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody id="tabla-vehiculos"></tbody>
-  </table>
+  <div id="contenedor-fichas"></div>
 
-  <script>
-    let vehiculos = JSON.parse(localStorage.getItem('vehiculos')) || [];
+<script>
+let vehiculos = JSON.parse(localStorage.getItem('vehiculos')) || [];
 
-    function mostrarVehiculos() {
-      const tbody = document.getElementById('tabla-vehiculos');
-      tbody.innerHTML = '';
-      vehiculos.forEach((v, i) => {
-        const fila = document.createElement('tr');
-        fila.innerHTML = `
-          <td>
-            <div style="border:1px dashed #4CFF4C; padding:6px; margin-bottom:6px;">
-              <label class='label'>Información General</label>
-              <label class='label'>Tipo</label><input value='${v.tipo}' onchange='editarCampo(${i}, "tipo", this.value, true)'>
-              <label class='label'>Marca</label><input value='${v.marca}' onchange='editarCampo(${i}, "marca", this.value, true)'>
-              <label class='label'>Modelo</label><input value='${v.modelo}' onchange='editarCampo(${i}, "modelo", this.value, true)'>
-              <label class='label'>Año</label><input value='${v.anio}' onchange='editarCampo(${i}, "anio", this.value, true)'>
-            </div>
-            <div style="border:1px dashed #FF4C4C; padding:6px; margin-bottom:6px;">
-              <label class='label'>Datos Técnicos</label>
-              <label class='label'>Motor</label><input value='${v.motor}' onchange='editarCampo(${i}, "motor", this.value, true)'>
-              <label class='label'>Cubiertas</label><input value='${v.cubiertas}' onchange='editarCampo(${i}, "cubiertas", this.value, true)'>
-              <label class='label'>Presión</label><input value='${v.presion}' onchange='editarCampo(${i}, "presion", this.value, true)'>
-              <label class='label'>Aceite</label><input value='${v.aceite}' onchange='editarCampo(${i}, "aceite", this.value, true)'>
-              <label class='label'>Cant. Aceite</label><input value='${v.cantidadAceite}' onchange='editarCampo(${i}, "cantidadAceite", this.value, true)'>
-              <label class='label'>HP</label><input value='${v.hp}' onchange='editarCampo(${i}, "hp", this.value, true)'>
-              <label class='label'>Frenos</label><input value='${v.frenos}' onchange='editarCampo(${i}, "frenos", this.value, true)'>
-            </div>
-            <div style="border:1px dashed #4C4CFF; padding:6px; position:relative;">
-              <label class='label'>Historial de Servicios</label>
-              ${v.servicios?.length ? `<ul style='margin:0;padding-left:16px;'>${v.servicios.map(s => `<li>${s}</li>`).join('')}</ul>` : '<em>Sin servicios</em>'}
-              <input type="text" id="nuevo-servicio-${i}" placeholder="Nuevo servicio"
-                style="margin-top:5px; width:100%; background-color:#1a1a1a; color:white; border:1px solid #555; padding:5px;"
-                onfocus="this.style.border='2px solid #FFFF4C'" onblur="this.style.border='1px solid #555'">
-              <button class="btn" onclick="
-                const input = document.getElementById('nuevo-servicio-${i}');
-                const valor = input.value.trim();
-                let aviso = document.getElementById('aviso-${i}');
-                if (!valor) {
-                  input.style.border = '2px solid red';
-                  input.placeholder = 'Este campo no puede estar vacío';
-                } else {
-                  vehiculos[${i}].servicios.push(valor);
-                  localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
-                  input.value = '';
-                  input.placeholder = 'Nuevo servicio';
-                  input.style.border = '1px solid #555';
-                  if (!aviso) {
-                    aviso = document.createElement('div');
-                    aviso.id = 'aviso-${i}';
-                    aviso.innerText = '✔ Servicio agregado';
-                    aviso.style.position = 'absolute';
-                    aviso.style.bottom = '-18px';
-                    aviso.style.right = '8px';
-                    aviso.style.fontSize = '12px';
-                    aviso.style.color = '#4CFF4C';
-                    aviso.style.animation = 'fadeout 2s ease forwards';
-                    document.querySelector(\`#nuevo-servicio-${i}\`).parentElement.appendChild(aviso);
-                    setTimeout(() => aviso.remove(), 2000);
-                  }
-                  mostrarVehiculos();
-                }
-              ">➕ Agregar</button>
-            </div>
-          </td>
-          <td><button class="btn" onclick="eliminarVehiculo(${i})">❌ Eliminar</button></td>
-        `;
-        tbody.appendChild(fila);
-      });
-    }
+function agregarVehiculo() {
+  const v = {
+    tipo: document.getElementById('tipo').value,
+    marca: document.getElementById('marca').value,
+    modelo: document.getElementById('modelo').value,
+    anio: document.getElementById('anio').value,
+    motor: document.getElementById('motor').value,
+    cubiertas: document.getElementById('cubiertas').value,
+    presion: document.getElementById('presion').value,
+    aceite: document.getElementById('aceite').value,
+    cantidadAceite: document.getElementById('cantidadAceite').value,
+    hp: document.getElementById('hp').value,
+    frenos: document.getElementById('frenos').value,
+    vin: document.getElementById('vin').value,
+    patente: document.getElementById('patente').value,
+    fechaAdquisicion: document.getElementById('fechaAdquisicion').value,
+    servicios: []
+  };
+  vehiculos.push(v);
+  localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
+  mostrarVehiculos();
+}
 
-    function agregarVehiculo() {
-      const campos = ['marca', 'modelo', 'anio'];
-      let valido = true;
-      campos.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el.value.trim()) {
-          el.classList.add('input-error');
-          valido = false;
-        } else {
-          el.classList.remove('input-error');
-        }
-      });
-      if (!valido) return;
+function mostrarVehiculos() {
+  const contenedor = document.getElementById('contenedor-fichas');
+  contenedor.innerHTML = '';
+  vehiculos.forEach((v, i) => {
+    const ficha = document.createElement('div');
+    ficha.className = 'ficha';
+    ficha.innerHTML = `
+      <div class="ficha-cabecera" onclick="
+        const d = document.getElementById('detalle-${i}');
+        d.style.display = d.style.display === 'block' ? 'none' : 'block';
+      ">
+        📁 ${v.tipo} ${v.marca} ${v.modelo} (${v.anio})
+      </div>
+      <div class="ficha-detalle" id="detalle-${i}">
+        <b>Motor:</b> ${v.motor} | <b>HP:</b> ${v.hp}<br>
+        <b>Aceite:</b> ${v.aceite} (${v.cantidadAceite}L), <b>Presión:</b> ${v.presion}<br>
+        <b>Cubiertas:</b> ${v.cubiertas} | <b>Frenos:</b> ${v.frenos}<br>
+        <b>VIN:</b> ${v.vin} | <b>Patente:</b> ${v.patente}<br>
+        <b>Adquirido:</b> ${v.fechaAdquisicion}
+        <hr>
+        <b>Servicios:</b><br>
+        ${v.servicios.length ? v.servicios.map(s => `🛠 ${s.fecha} - ${s.tipo} - ${s.desc} ($${s.costo})`).join('<br>') : '<i>Sin servicios registrados</i>'}
+      </div>`;
+    contenedor.appendChild(ficha);
+  });
+}
 
-      const v = {
-        tipo: document.getElementById('tipo').value,
-        marca: document.getElementById('marca').value,
-        modelo: document.getElementById('modelo').value,
-        anio: document.getElementById('anio').value,
-        motor: document.getElementById('motor').value,
-        cubiertas: document.getElementById('cubiertas').value,
-        presion: document.getElementById('presion').value,
-        aceite: document.getElementById('aceite').value,
-        cantidadAceite: document.getElementById('cantidadAceite').value,
-        hp: document.getElementById('hp').value,
-        frenos: document.getElementById('frenos').value,
-        servicios: []
-      };
-
-      vehiculos.push(v);
-      localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
-      mostrarVehiculos();
-    }
-
-    function eliminarVehiculo(index) {
-      vehiculos.splice(index, 1);
-      localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
-      mostrarVehiculos();
-    }
-
-    function editarCampo(index, campo, valor, mostrarAviso = false) {
-      vehiculos[index][campo] = valor;
-      localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
-      if (mostrarAviso) {
-        const fila = document.querySelectorAll('tbody tr')[index];
-        if (fila && !fila.querySelector('.edicion-ok')) {
-          const aviso = document.createElement('div');
-          aviso.innerText = '✔ Datos actualizados';
-          aviso.className = 'edicion-ok';
-          aviso.style.position = 'absolute';
-          aviso.style.bottom = '-18px';
-          aviso.style.right = '8px';
-          aviso.style.fontSize = '12px';
-          aviso.style.color = '#FFFF4C';
-          aviso.style.animation = 'fadeout 2s ease forwards';
-          fila.querySelector('td').appendChild(aviso);
-          setTimeout(() => aviso.remove(), 2000);
-        }
-      }
-    }
-
-    mostrarVehiculos();
-  </script>
+mostrarVehiculos();
+</script>
 </body>
 </html>
