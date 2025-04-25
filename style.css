@@ -1,0 +1,283 @@
+/* CSS (style.css) - Sin cambios respecto a la versión anterior */
+/* ... (Pega aquí el contenido completo del style.css v5 que te di antes) ... */
+/* O asegúrate de que sea el mismo CSS que funcionaba para los estilos */
+
+:root {
+    --bg-dark: #1a1a1a;
+    --bg-med: #2a2a2a;
+    --bg-light: #222;
+    --text-light: white;
+    --accent1: #FFFF4C; /* Amarillo */
+    --accent2: #4C4CFF; /* Azul */
+    --accent3: #4CFF4C; /* Verde */
+    --accent-delete: #FF4C4C; /* Rojo */
+    --border-color: #555;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-family: monospace;
+    padding: 20px;
+    font-size: 14px;
+    line-height: 1.5; /* Mejorar legibilidad */
+}
+
+h1 {
+    text-align: center;
+    color: var(--accent1);
+    margin-bottom: 20px; /* Espacio debajo del título */
+}
+
+.btn {
+    background: var(--accent2);
+    color: var(--text-light);
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+    border-radius: 4px;
+    font-family: monospace;
+    transition: opacity 0.2s ease; /* Transición suave */
+}
+.btn-delete {
+    background: var(--accent-delete);
+}
+.btn-add {
+     background: var(--accent3);
+     color: var(--bg-dark);
+}
+.btn-small { /* Clase auxiliar para botones más pequeños */
+    padding: 4px 8px;
+    font-size: 0.9em;
+}
+
+button:hover, .btn:hover { /* Aplicar hover a todos los botones */
+    opacity: 0.85;
+}
+
+/* Estilos formularios */
+.formulario-principal, .formulario-servicio {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 15px; /* Ajustar gap horizontal */
+    background-color: var(--bg-med);
+    padding: 20px; /* Más padding */
+    margin-top: 15px;
+    border: 2px dashed var(--accent3);
+    border-radius: 8px;
+}
+
+/* .formulario-principal está oculto por defecto via inline style en HTML */
+
+.formulario-principal fieldset { /* Estilo para fieldset */
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin: 0; /* Reset margin */
+    width: 100%; /* Ocupar todo el ancho */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 15px;
+}
+.formulario-principal legend { /* Estilo para legend */
+    color: var(--accent1);
+    font-weight: bold;
+    padding: 0 5px;
+}
+
+.formulario-servicio {
+    border-style: solid;
+    border-color: var(--accent2);
+    margin-top: 10px;
+    padding: 15px; /* Más padding */
+}
+.formulario-servicio h4 {
+    width: 100%;
+    margin: 0 0 15px 0; /* Más margen inferior */
+    color: var(--accent1);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 8px; /* Más padding */
+    font-size: 1.1em; /* Ligeramente más grande */
+}
+
+/* Estilos fichas */
+.ficha {
+    margin: 20px 0; /* Más margen vertical */
+    border: 2px solid var(--accent2);
+    border-radius: 8px;
+    background-color: var(--bg-light);
+    overflow: hidden; /* Contain borders and padding */
+}
+
+.ficha-cabecera {
+    background: var(--accent2);
+    padding: 12px 15px; /* Más padding vertical */
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ficha-cabecera span {
+    font-weight: bold;
+    margin-right: 10px; /* Espacio entre texto y botones */
+}
+.ficha-cabecera div { /* Contenedor para botones en cabecera */
+    display: flex;
+    gap: 5px;
+}
+
+
+.ficha-detalle {
+    /* display: none; por defecto, se controla en renderizado JS */
+    padding: 20px; /* Más padding */
+    border-top: 2px solid var(--accent2);
+    background-color: var(--bg-light); /* Asegurar fondo por si acaso */
+}
+.ficha-detalle hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 20px 0; /* Más margen */
+}
+.ficha-detalle b { /* Etiquetas en el detalle */
+    color: var(--accent1);
+    min-width: 90px; /* Ancho mínimo etiqueta */
+    display: inline-block;
+    margin-right: 5px; /* Espacio después de la etiqueta */
+}
+.ficha-detalle div { /* Espacio entre líneas de detalle */
+    margin-bottom: 8px;
+}
+.ficha-detalle div:last-of-type {
+    margin-bottom: 0;
+}
+
+/* Estilos inputs y labels */
+input, select {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+    padding: 8px 10px; /* Ajustar padding */
+    font-family: monospace;
+    border-radius: 4px;
+    margin: 0; /* Quitar margen por defecto */
+    font-size: 1em; /* Asegurar tamaño fuente consistente */
+    box-sizing: border-box; /* Incluir padding y borde en el tamaño */
+}
+input[type="date"] {
+     min-width: 140px; /* Ancho mínimo para fecha */
+}
+input::placeholder {
+    color: #999; /* Placeholder un poco más claro */
+    opacity: 1; /* Asegurar visibilidad en Firefox */
+}
+input:focus, select:focus { /* Estilo al enfocar */
+    outline: none;
+    border-color: var(--accent1);
+    box-shadow: 0 0 5px var(--accent1);
+}
+
+label {
+    display: block; /* Hacer que el label ocupe su línea */
+    margin-bottom: 4px; /* Espacio debajo del label */
+    font-size: 0.9em;
+    color: #ccc;
+    padding-left: 2px; /* Pequeña indentación */
+}
+
+.input-group {
+     display: flex;
+     flex-direction: column;
+     flex: 1 1 200px; /* Flex grow, shrink y basis para responsive */
+     min-width: 150px; /* Ancho mínimo antes de envolver */
+}
+/* Ajustes específicos para campos más pequeños en formularios */
+.formulario-principal .input-group[has-type="number"],
+.formulario-principal .input-group[has-type="date"] {
+    flex-basis: 150px; /* Base más pequeña para números y fechas */
+}
+
+
+/* Estilos para la edición inline */
+.edited {
+    background-color: #33aa55 !important; /* Verde más visible */
+    transition: background-color 0.1s ease; /* Transición más rápida al aplicar */
+}
+.edited-fadeout { /* Clase para desvanecer el fondo */
+     transition: background-color 0.8s ease;
+     background-color: var(--bg-dark) !important; /* Volver al fondo original */
+}
+
+/* Estilos lista de servicios */
+#contenedor-fichas .ficha-detalle h4 { /* Título 'Servicios Realizados' */
+    color: var(--accent1);
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.servicio-item {
+    border-bottom: 1px dashed var(--border-color);
+    padding: 12px 0; /* Más padding */
+    margin-bottom: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px; /* Espacio entre elementos del servicio */
+}
+.servicio-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.servicio-item small { /* Detalles adicionales del servicio */
+     color: #bbb; /* Ligeramente más claro */
+     width: 100%;
+     margin-top: 8px;
+     padding-left: 28px; /* Indentación para alinear con inputs principales */
+     font-size: 0.9em;
+     display: flex; /* Usar flex para alinear inputs internos */
+     flex-wrap: wrap;
+     gap: 5px 10px;
+}
+.servicio-item small input { /* Inputs dentro de 'small' */
+    flex: 1 1 120px; /* Permitir que crezcan y se envuelvan */
+    padding: 4px 6px; /* Más pequeños */
+    font-size: 0.9em;
+}
+.servicio-item small label { /* Ocultar labels explícitos dentro de small, usar placeholder */
+    display: none;
+}
+
+.servicio-item input, .servicio-item select { /* Inputs principales del servicio */
+    flex-grow: 1; /* Permitir que los inputs ocupen espacio */
+    min-width: 100px; /* Ancho mínimo antes de encoger */
+}
+.servicio-item input[type='date'] {
+    flex-grow: 0; /* No permitir que la fecha crezca demasiado */
+    min-width: 140px;
+}
+.servicio-item input[type='number'] {
+    flex-grow: 0;
+    max-width: 100px; /* Ancho máximo para costo */
+}
+
+.servicio-item .btn-delete {
+    padding: 4px 8px; /* Botón eliminar servicio más pequeño */
+    margin-left: auto; /* Empujar a la derecha */
+    flex-shrink: 0; /* No encoger el botón */
+}
+.servicio-item > span:first-of-type { /* Icono + Fecha */
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espacio icono-fecha */
+    flex-shrink: 0; /* No encoger este span */
+}
+
+/* Mensaje cuando no hay vehículos */
+.no-vehiculos-mensaje {
+    text-align: center;
+    margin-top: 30px;
+    color: #aaa;
+    font-style: italic;
+}
